@@ -9,18 +9,24 @@
     --font-color: #e2dfdf;
   }
 
+
   body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40vh;
+    height: 100%;
+    margin: 2em;
   }
 
   main {
-    border-radius: 12px;
+    border-radius: 8px;
     width: 80%;
     margin: 0 auto;
     background-color: var(--primary-color);
+  }
+
+  .full-screen {
+    border-radius: 0px;
+    margin: 0px !important;
+    width: 100%;
+    height: 100vh;
   }
 
   .navigation {
@@ -66,7 +72,7 @@
     overflow: hidden;
   }
 
-  .right-side .fa-up-right-and-down-left-from-center,
+  .right-side .full-btn,
   .fa-gear {
     cursor: pointer;
     font-size: 1.2em;
@@ -75,13 +81,14 @@
 
   }
 
-  .right-side .fa-up-right-and-down-left-from-center:hover,
+  .right-side .full-btn:hover,
   .fa-gear:hover {
     padding: 10px;
     background-color: #ffffff49;
     border-radius: 8px;
   }
 
+  /*ToolBar*/
   .toolbar {
     display: flex;
     justify-content: space-between;
@@ -110,7 +117,7 @@
 
   .d-flex {
     display: flex;
-    gap: 1.2em;
+    gap: 1.5em;
     align-items: center;
   }
 
@@ -124,12 +131,12 @@
     color: var(--font-color);
     font-size: 1.1em;
     cursor: pointer;
-    transition: 0.4s all ease;
+    transition: 0.3s all ease;
   }
 
   .save-btn:hover {
     background-color: #ffffff49;
-    padding: 10px 20px;
+    padding: 5px 10px;
     border-radius: 5px;
   }
 
@@ -143,12 +150,12 @@
     color: var(--font-color);
     font-size: 1.1em;
     cursor: pointer;
-    transition: 0.4s all ease;
+    transition: 0.3s all ease;
   }
 
   .copy-btn:hover {
     background-color: #ffffff49;
-    padding: 10px 20px;
+    padding: 5px 10px;
     border-radius: 5px;
   }
 
@@ -169,4 +176,83 @@
     border-radius: 50%;
     display: inline-block;
     align-content: center;
+  }
+
+  /*file-menu*/
+
+  .file-menu {
+    display: flex;
+    /* border: 1px solid var(--font-color); */
+    border: 1px solid #ffffff49;
+
+  }
+
+  .menu-tab {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 0.5em 2em;
+    transition: 0.4s all ease;
+    cursor: pointer;
+    color: var(--font-color);
+    border-top: 1px solid var(--primary-color);
+    border: 1px solid #ffffff49;
+
+  }
+
+
+  .menu-tab:hover {
+    border-top: 1px solid white;
+    background-color: #1E2939;
+    color: var(--font-color);
+  }
+
+
+  .fa-html5 {
+    cursor: pointer;
+    font-size: 2em;
+    color: #DD4B25;
+  }
+
+  .fa-css3-alt {
+    cursor: pointer;
+    font-size: 2em;
+    color: #205FAA;
+  }
+
+  .fa-square-js {
+    cursor: pointer;
+    font-size: 2em;
+    color: #E8D44D;
+  }
+
+  .main-content {
+    display: flex;
+    justify-content: center;
+    height: 50vh;
+  }
+
+  .code-input {
+    resize: none;
+    padding: 1em;
+    font-family: "Cascadia code", sans-serif;
+    font-weight: 500;
+    font-size: 1.2em;
+    color: var(--font-color);
+    background-color: var(--primary-color);
+    width: 100%;
+    height: 100%;
+    border: none;
+    scrollbar-width: none;
+  }
+
+  .code-input:focus {
+    outline: none;
+    border: none;
+  }
+
+  @media screen and (min-width:1400px) {
+    .main-content {
+      height: 65vh;
+    }
   }
