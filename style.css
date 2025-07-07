@@ -179,10 +179,8 @@
   }
 
   /*file-menu*/
-
   .file-menu {
     display: flex;
-    /* border: 1px solid var(--font-color); */
     border: 1px solid #ffffff49;
 
   }
@@ -192,7 +190,7 @@
     align-items: center;
     gap: 1em;
     padding: 0.5em 2em;
-    transition: 0.4s all ease;
+    transition: 0.3s all ease;
     cursor: pointer;
     color: var(--font-color);
     border-top: 1px solid var(--primary-color);
@@ -200,6 +198,13 @@
 
   }
 
+  .active-tab {
+    transition: none;
+
+    border: 1px solid #ffffffb8;
+    color: #fff;
+    background-color: #1E2939 !important;
+  }
 
   .menu-tab:hover {
     border-top: 1px solid white;
@@ -229,13 +234,14 @@
   .main-content {
     display: flex;
     justify-content: center;
-    height: 50vh;
+    height: 60vh;
   }
 
   .code-input {
     resize: none;
-    padding: 1em;
     font-family: "Cascadia code", sans-serif;
+    padding-left: 1em;
+    padding-top: 1em;
     font-weight: 500;
     font-size: 1.2em;
     color: var(--font-color);
@@ -251,8 +257,26 @@
     border: none;
   }
 
+  .hide {
+    display: none;
+  }
+
+  .preview-page {
+    padding-top: 1.2em;
+
+    width: 100%;
+    height: 100% !important;
+    margin: 0 auto;
+    background-color: #9a9a9a;
+  }
+
+  .code-output {
+    width: 100%;
+    height: 100%;
+  }
+
   @media screen and (min-width:1400px) {
     .main-content {
-      height: 65vh;
+      height: 73.2vh;
     }
   }
