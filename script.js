@@ -9,7 +9,11 @@ const codeOutput = document.querySelector(".code-output");
 
 // Restore saved code from localStorage
 function restoreCode() {
-  let previousCode = JSON.parse(localStorage.getItem("userCode")) || [];
+  let previousCode = JSON.parse(localStorage.getItem("userCode")) || {
+    html: "",
+    css: "",
+    js: "",
+  };
   return previousCode;
 }
 // Handle full screen toggle
@@ -50,8 +54,9 @@ function menuToggle() {
         generateHtmlCode();
       } else if (singleTab.childNodes[3].innerHTML === "style.css") {
         generateCssCode();
+      } else {
+        generateJsCode();
       }
-
       singleTab.classList.add("active-tab");
     });
   });
@@ -65,6 +70,7 @@ function previewPage() {
   document.body.addEventListener("keyup", (e) => {
     if ((e.key === "p" && e.shiftKey) || (e.key === "P" && e.shiftKey)) {
       previewPage.classList.toggle("hide");
+      e.preventDefault();
     }
   });
 
@@ -103,6 +109,27 @@ function generateCssCode() {
   };
 }
 
+function generateJsCode() {
+  const runCodeBtn = document.querySelector(".run-btn");
+  runCodeBtn.style.pointerEvents = "auto";
+  runCodeBtn.addEventListener("click", () => {
+    codeOutput.contentDocument.write(`
+  <script>
+  ${codeInput.value}
+  <\/script>
+`);
+  });
+  codeInput.placeholder = `Write JavaScript Code`;
+  let previousCode = restoreCode();
+  codeInput.value = previousCode.js;
+  userCode.js = codeInput.value;
+  codeInput.oninput = () => {
+    userCode.js = codeInput.value;
+    starterCode();
+    saveToStorage();
+  };
+}
+
 // Shortcut for inserting basic HTML boilerplate
 function starterCode() {
   if (codeInput.value == "!") {
@@ -117,25 +144,32 @@ function starterCode() {
   
 </body>
 </html>`;
+    userCode.html = codeInput.value;
   } else if (codeInput.value == "*") {
     codeInput.value = `* {
-    margin: 0;
-    padding: 0;
-    font-family: "Poppins", sans-serif;
-  }`;
+   margin: 0;
+   padding: 0;
+   font-family: "Poppins", sans-serif;
+}`;
+    userCode.css = codeInput.value;
   }
 }
 
 // Save user code to localStorage
 function saveToStorage() {
-  localStorage.setItem("userCode", JSON.stringify(userCode));
+  if (userCode.html === undefined) {
+    alert("hello");
+  }
+  localStorage.setItem("userCode", JSON.stringify(userCode)) || "";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  restoreCode();
   starterCode();
   menuToggle();
   fullScreen();
+  // generateJsCode();
+  generateCssCode();
   generateHtmlCode();
   previewPage();
-  restoreCode();
 });

@@ -106,11 +106,12 @@
     border-radius: 4px;
     background-color: #155DFC;
     transition: 0.3s all ease;
-    cursor: pointer;
+    pointer-events: none;
     font-weight: 500;
   }
-
+  
   .run-btn:hover {
+    cursor: not-allowed;
     background-color: #0b3693;
     transform: scale(1.2);
   }
@@ -202,7 +203,7 @@
     transition: none;
     border: 1px solid #ffffffb8;
     color: #fff;
-    background-color: #030a28 !important;
+    background-color: #031150 !important;
   }
 
   .menu-tab:hover {
