@@ -1,29 +1,16 @@
-// Initial user code setup
 let userCode = {
   html: "",
   css: "",
   js: "",
 };
+
 const codeInput = document.querySelector(".code-input");
-
-// Load initial setup
-loadPage();
-
-// Load page with necessary setups
-function loadPage() {
-  menuToggle();
-  previewPage();
-  fullScreen();
-  displayCode();
-  restoreCode();
-}
+const codeOutput = document.querySelector(".code-output");
 
 // Restore saved code from localStorage
 function restoreCode() {
-  let previousCode = JSON.parse(localStorage.getItem("userCode"));
-  codeInput.value = previousCode.html;
-  displayCode()
-  console.log(previousCode.html);
+  let previousCode = JSON.parse(localStorage.getItem("userCode")) || [];
+  return previousCode;
 }
 // Handle full screen toggle
 function fullScreen() {
@@ -59,12 +46,11 @@ function menuToggle() {
     singleTab.addEventListener("click", () => {
       allTabs.forEach((active) => active.classList.remove("active-tab"));
 
-      // Tab-specific logic (commented out for now)
-      // if (singleTab.childNodes[3].innerHTML === "index.html") {
-      //   generateHtmlCode(codeInput);
-      // } else if (singleTab.childNodes[3].innerHTML === "style.css") {
-      //   generateCssCode(codeInput);
-      // }
+      if (singleTab.childNodes[3].innerHTML === "index.html") {
+        generateHtmlCode();
+      } else if (singleTab.childNodes[3].innerHTML === "style.css") {
+        generateCssCode();
+      }
 
       singleTab.classList.add("active-tab");
     });
@@ -84,22 +70,37 @@ function previewPage() {
 
   previewBtn.addEventListener("click", () => {
     previewPage.classList.toggle("hide");
+    generateHtmlCode();
   });
 }
 
 // Live display code and sync to output
-function displayCode() {
-  const codeInput = document.querySelector(".code-input");
-  const codeOutput = document.querySelector(".code-output");
-
+function generateHtmlCode() {
+  let previousCode = restoreCode();
+  codeInput.placeholder = `Type "!" to insert boilerplate HTML code`;
+  codeInput.value = previousCode.html;
+  userCode.html = codeInput.value;
   codeOutput.contentDocument.body.innerHTML = codeInput.value;
-  codeInput.addEventListener("input", () => {
+  codeInput.oninput = () => {
     codeOutput.contentDocument.body.innerHTML = codeInput.value;
     userCode.html = codeInput.value;
-
     starterCode();
     saveToStorage();
-  });
+  };
+}
+
+function generateCssCode() {
+  codeInput.placeholder = `Type "*" to insert boilerplate CSS`;
+  let previousCode = restoreCode();
+  codeInput.value = previousCode.css;
+  userCode.css = codeInput.value;
+  codeOutput.contentDocument.head.innerHTML = `<style>${codeInput.value}</style>`;
+  codeInput.oninput = () => {
+    codeOutput.contentDocument.head.innerHTML = `<style>${codeInput.value}</style>`;
+    userCode.css = codeInput.value;
+    starterCode();
+    saveToStorage();
+  };
 }
 
 // Shortcut for inserting basic HTML boilerplate
@@ -116,6 +117,12 @@ function starterCode() {
   
 </body>
 </html>`;
+  } else if (codeInput.value == "*") {
+    codeInput.value = `* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+  }`;
   }
 }
 
@@ -123,3 +130,12 @@ function starterCode() {
 function saveToStorage() {
   localStorage.setItem("userCode", JSON.stringify(userCode));
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  starterCode();
+  menuToggle();
+  fullScreen();
+  generateHtmlCode();
+  previewPage();
+  restoreCode();
+});
