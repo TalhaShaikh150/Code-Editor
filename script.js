@@ -39,6 +39,8 @@ function fullScreen() {
     if (window.innerWidth > 1400) {
       mainContent.classList.add("full-screen");
     }
+
+     
   });
 }
 
@@ -168,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
   starterCode();
   menuToggle();
   fullScreen();
-  // generateJsCode();
   generateCssCode();
   generateHtmlCode();
   previewPage();
