@@ -39,8 +39,6 @@ function fullScreen() {
     if (window.innerWidth > 1400) {
       mainContent.classList.add("full-screen");
     }
-
-     
   });
 }
 
@@ -80,6 +78,16 @@ function previewPage() {
     previewPage.classList.toggle("hide");
     generateHtmlCode();
   });
+}
+function openIframeContentInNewTab() {
+  const iframe = document.querySelector("iframe.code-output");
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  const html = doc.documentElement.outerHTML;
+
+  const newTab = window.open();
+  newTab.document.open();
+  newTab.document.write(html);
+  newTab.document.close();
 }
 
 // Live display code and sync to output
