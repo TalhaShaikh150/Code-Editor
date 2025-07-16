@@ -173,6 +173,21 @@ function saveToStorage() {
   localStorage.setItem("userCode", JSON.stringify(userCode)) || "";
 }
 
+function copyCode() {
+  const copyBtn = document.querySelector(".copy-btn");
+  const copyIcon = document.querySelector(".fa-copy");
+  copyBtn.addEventListener("click", () => {
+    let copyOfCode = codeInput.value;
+
+    navigator.clipboard.writeText(copyOfCode);
+
+    copyBtn.innerHTML = `<i class="fa-solid fa-check"></i> Copied`;
+    setTimeout(() => {
+      copyBtn.innerHTML = `<i class="fa-solid fa-copy"></i> Copy`;
+    }, 1200);
+  });
+}
+copyCode();
 document.addEventListener("DOMContentLoaded", () => {
   restoreCode();
   starterCode();
