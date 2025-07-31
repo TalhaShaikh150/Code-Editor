@@ -167,9 +167,6 @@ function starterCode() {
 
 // Save user code to localStorage
 function saveToStorage() {
-  if (userCode.html === undefined) {
-    alert("hello");
-  }
   localStorage.setItem("userCode", JSON.stringify(userCode)) || "";
 }
 
@@ -187,7 +184,23 @@ function copyCode() {
     }, 1200);
   });
 }
-copyCode();
+
+function deleteCode() {
+  const clearBtn = document.querySelector(".clear-btn");
+  clearBtn.addEventListener("click", () => {
+    clearBtn.innerHTML = `<i class="fa-solid fa-check"></i> Cleared`;
+    setTimeout(() => {
+      clearBtn.innerHTML = `<i class="fa-solid fa-trash"></i> Clear All`;
+    }, 1200);
+    codeInput.value = "";
+    userCode.html = "";
+    userCode.css = "";
+    userCode.js = "";
+    saveToStorage();
+  });
+}
+deleteCode();
+
 document.addEventListener("DOMContentLoaded", () => {
   restoreCode();
   starterCode();
@@ -196,4 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
   generateCssCode();
   generateHtmlCode();
   previewPage();
+  copyCode();
+  deleteCode();
 });
