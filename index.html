@@ -2,100 +2,1082 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewp ort" content="width=device-width, initial-scale=1.0" />
-    <title>Code Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NovaCode Editor</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:wght@100..900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="favicon-32x32.png" />
+    <style>
+      /* Base Theme Variables */
+      :root {
+        /* Default Theme (Dark) */
+        --primary: #1a1d24;
+        --secondary: #242831;
+        --accent: #5d78ff;
+        --accent-light: #7d92ff;
+        --text-primary: #e0e3eb;
+        --text-secondary: #8a919d;
+        --border: #2f343e;
+        --success: #4ade80;
+        --editor-bg: #1a1d24;
+        --sidebar-width: 220px;
+        --preview-width: 350px;
+        --status-height: 28px;
+        --tab-height: 40px;
+        --line-number-color: #4b5563;
+        --line-number-bg: #1e293b;
+
+        /* Syntax highlighting colors */
+        --syntax-tag: #ff7b72;
+        --syntax-attribute: #79c0ff;
+        --syntax-value: #a5d6ff;
+        --syntax-comment: #8b949e;
+        --syntax-keyword: #ff7b72;
+        --syntax-string: #a5d6ff;
+        --syntax-function: #d2a8ff;
+        --syntax-variable: #ffa657;
+        --syntax-number: #79c0ff;
+        --syntax-operator: #ff7b72;
+      }
+
+      /* Light Theme */
+      .theme-light {
+        --primary: #f3f4f6;
+        --secondary: #e5e7eb;
+        --accent: #6366f1;
+        --accent-light: #818cf8;
+        --text-primary: #111827;
+        --text-secondary: #6b7280;
+        --border: #d1d5db;
+        --success: #10b981;
+        --editor-bg: #f9fafb;
+        --line-number-color: #9ca3af;
+        --line-number-bg: #e5e7eb;
+
+        --syntax-tag: #22863a;
+        --syntax-attribute: #6f42c1;
+        --syntax-value: #032f62;
+        --syntax-comment: #6a737d;
+        --syntax-keyword: #d73a49;
+        --syntax-string: #032f62;
+        --syntax-function: #6f42c1;
+        --syntax-variable: #e36209;
+        --syntax-number: #005cc5;
+        --syntax-operator: #d73a49;
+      }
+
+      /* Ocean Theme */
+      .theme-ocean {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #0ea5e9;
+        --accent-light: #38bdf8;
+        --text-primary: #e2e8f0;
+        --text-secondary: #94a3b8;
+        --border: #334155;
+        --success: #2dd4bf;
+        --editor-bg: #0f172a;
+        --line-number-color: #475569;
+        --line-number-bg: #1e293b;
+
+        --syntax-tag: #fda4af;
+        --syntax-attribute: #7dd3fc;
+        --syntax-value: #bae6fd;
+        --syntax-comment: #94a3b8;
+        --syntax-keyword: #fda4af;
+        --syntax-string: #bae6fd;
+        --syntax-function: #d8b4fe;
+        --syntax-variable: #fdba74;
+        --syntax-number: #7dd3fc;
+        --syntax-operator: #fda4af;
+      }
+
+      /* Dracula Theme */
+      .theme-dracula {
+        --primary: #282a36;
+        --secondary: #44475a;
+        --accent: #bd93f9;
+        --accent-light: #d6acff;
+        --text-primary: #f8f8f2;
+        --text-secondary: #6272a4;
+        --border: #6272a4;
+        --success: #50fa7b;
+        --editor-bg: #282a36;
+        --line-number-color: #6272a4;
+        --line-number-bg: #44475a;
+
+        --syntax-tag: #ff79c6;
+        --syntax-attribute: #bd93f9;
+        --syntax-value: #8be9fd;
+        --syntax-comment: #6272a4;
+        --syntax-keyword: #ff79c6;
+        --syntax-string: #f1fa8c;
+        --syntax-function: #bd93f9;
+        --syntax-variable: #ffb86c;
+        --syntax-number: #bd93f9;
+        --syntax-operator: #ff79c6;
+      }
+
+      /* Solarized Dark */
+      .theme-solarized-dark {
+        --primary: #002b36;
+        --secondary: #073642;
+        --accent: #d33682;
+        --accent-light: #dc322f;
+        --text-primary: #839496;
+        --text-secondary: #586e75;
+        --border: #073642;
+        --success: #859900;
+        --editor-bg: #002b36;
+        --line-number-color: #586e75;
+        --line-number-bg: #073642;
+
+        --syntax-tag: #dc322f;
+        --syntax-attribute: #268bd2;
+        --syntax-value: #2aa198;
+        --syntax-comment: #586e75;
+        --syntax-keyword: #dc322f;
+        --syntax-string: #2aa198;
+        --syntax-function: #b58900;
+        --syntax-variable: #cb4b16;
+        --syntax-number: #268bd2;
+        --syntax-operator: #dc322f;
+      }
+
+      /* Solarized Light */
+      .theme-solarized-light {
+        --primary: #fdf6e3;
+        --secondary: #eee8d5;
+        --accent: #d33682;
+        --accent-light: #dc322f;
+        --text-primary: #657b83;
+        --text-secondary: #93a1a1;
+        --border: #eee8d5;
+        --success: #859900;
+        --editor-bg: #fdf6e3;
+        --line-number-color: #93a1a1;
+        --line-number-bg: #eee8d5;
+
+        --syntax-tag: #dc322f;
+        --syntax-attribute: #268bd2;
+        --syntax-value: #2aa198;
+        --syntax-comment: #93a1a1;
+        --syntax-keyword: #dc322f;
+        --syntax-string: #2aa198;
+        --syntax-function: #b58900;
+        --syntax-variable: #cb4b16;
+        --syntax-number: #268bd2;
+        --syntax-operator: #dc322f;
+      }
+
+      /* Monokai */
+      .theme-monokai {
+        --primary: #272822;
+        --secondary: #3e3d32;
+        --accent: #f92672;
+        --accent-light: #fd971f;
+        --text-primary: #f8f8f2;
+        --text-secondary: #75715e;
+        --border: #3e3d32;
+        --success: #a6e22e;
+        --editor-bg: #272822;
+        --line-number-color: #75715e;
+        --line-number-bg: #3e3d32;
+
+        --syntax-tag: #f92672;
+        --syntax-attribute: #66d9ef;
+        --syntax-value: #a6e22e;
+        --syntax-comment: #75715e;
+        --syntax-keyword: #f92672;
+        --syntax-string: #e6db74;
+        --syntax-function: #66d9ef;
+        --syntax-variable: #fd971f;
+        --syntax-number: #ae81ff;
+        --syntax-operator: #f92672;
+      }
+
+      /* Nord Theme */
+      .theme-nord {
+        --primary: #2e3440;
+        --secondary: #3b4252;
+        --accent: #81a1c1;
+        --accent-light: #88c0d0;
+        --text-primary: #d8dee9;
+        --text-secondary: #4c566a;
+        --border: #434c5e;
+        --success: #a3be8c;
+        --editor-bg: #2e3440;
+        --line-number-color: #4c566a;
+        --line-number-bg: #3b4252;
+
+        --syntax-tag: #81a1c1;
+        --syntax-attribute: #88c0d0;
+        --syntax-value: #a3be8c;
+        --syntax-comment: #4c566a;
+        --syntax-keyword: #81a1c1;
+        --syntax-string: #a3be8c;
+        --syntax-function: #88c0d0;
+        --syntax-variable: #d08770;
+        --syntax-number: #b48ead;
+        --syntax-operator: #81a1c1;
+      }
+
+      /* One Dark Pro */
+      .theme-one-dark {
+        --primary: #282c34;
+        --secondary: #21252b;
+        --accent: #61afef;
+        --accent-light: #56b6c2;
+        --text-primary: #abb2bf;
+        --text-secondary: #5c6370;
+        --border: #3e4451;
+        --success: #98c379;
+        --editor-bg: #282c34;
+        --line-number-color: #5c6370;
+        --line-number-bg: #21252b;
+
+        --syntax-tag: #e06c75;
+        --syntax-attribute: #61afef;
+        --syntax-value: #98c379;
+        --syntax-comment: #5c6370;
+        --syntax-keyword: #c678dd;
+        --syntax-string: #98c379;
+        --syntax-function: #61afef;
+        --syntax-variable: #e5c07b;
+        --syntax-number: #d19a66;
+        --syntax-operator: #c678dd;
+      }
+
+      /* Material Theme */
+      .theme-material {
+        --primary: #263238;
+        --secondary: #1e272c;
+        --accent: #80cbc4;
+        --accent-light: #89ddff;
+        --text-primary: #eeffff;
+        --text-secondary: #546e7a;
+        --border: #37474f;
+        --success: #c3e88d;
+        --editor-bg: #263238;
+        --line-number-color: #546e7a;
+        --line-number-bg: #1e272c;
+
+        --syntax-tag: #f07178;
+        --syntax-attribute: #89ddff;
+        --syntax-value: #c3e88d;
+        --syntax-comment: #546e7a;
+        --syntax-keyword: #c792ea;
+        --syntax-string: #c3e88d;
+        --syntax-function: #82aaff;
+        --syntax-variable: #ffcb6b;
+        --syntax-number: #f78c6c;
+        --syntax-operator: #c792ea;
+      }
+
+      /* Tokyo Night */
+      .theme-tokyo-night {
+        --primary: #1a1b26;
+        --secondary: #24283b;
+        --accent: #7aa2f7;
+        --accent-light: #9ece6a;
+        --text-primary: #a9b1d6;
+        --text-secondary: #565f89;
+        --border: #414868;
+        --success: #9ece6a;
+        --editor-bg: #1a1b26;
+        --line-number-color: #565f89;
+        --line-number-bg: #24283b;
+
+        --syntax-tag: #f7768e;
+        --syntax-attribute: #7aa2f7;
+        --syntax-value: #9ece6a;
+        --syntax-comment: #565f89;
+        --syntax-keyword: #bb9af7;
+        --syntax-string: #9ece6a;
+        --syntax-function: #7aa2f7;
+        --syntax-variable: #e0af68;
+        --syntax-number: #ff9e64;
+        --syntax-operator: #bb9af7;
+      }
+
+      /* Ayu Dark */
+      .theme-ayu-dark {
+        --primary: #0a0e14;
+        --secondary: #0f1319;
+        --accent: #ffcc66;
+        --accent-light: #e6b450;
+        --text-primary: #e6e1cf;
+        --text-secondary: #4d5566;
+        --border: #1a1f27;
+        --success: #aad94c;
+        --editor-bg: #0a0e14;
+        --line-number-color: #4d5566;
+        --line-number-bg: #0f1319;
+
+        --syntax-tag: #ff3333;
+        --syntax-attribute: #59c2ff;
+        --syntax-value: #aad94c;
+        --syntax-comment: #4d5566;
+        --syntax-keyword: #ff7733;
+        --syntax-string: #aad94c;
+        --syntax-function: #ffb454;
+        --syntax-variable: #ffcc66;
+        --syntax-number: #f29668;
+        --syntax-operator: #ff7733;
+      }
+
+      /* Gruvbox Dark */
+      .theme-gruvbox-dark {
+        --primary: #282828;
+        --secondary: #3c3836;
+        --accent: #d79921;
+        --accent-light: #fabd2f;
+        --text-primary: #ebdbb2;
+        --text-secondary: #928374;
+        --border: #504945;
+        --success: #98971a;
+        --editor-bg: #282828;
+        --line-number-color: #928374;
+        --line-number-bg: #3c3836;
+
+        --syntax-tag: #fb4934;
+        --syntax-attribute: #83a598;
+        --syntax-value: #b8bb26;
+        --syntax-comment: #928374;
+        --syntax-keyword: #fe8019;
+        --syntax-string: #b8bb26;
+        --syntax-function: #fabd2f;
+        --syntax-variable: #d3869b;
+        --syntax-number: #d3869b;
+        --syntax-operator: #fe8019;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #020617;
+        color: var(--text-primary);
+        height: 100vh;
+        overflow: hidden;
+        transition: background-color 0.3s ease;
+      }
+
+      .editor-container {
+        display: flex;
+        height: 100vh;
+        transition: all 0.3s ease;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--primary);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        padding: 18px 16px;
+        font-size: 18px;
+        font-weight: 600;
+        border-bottom: 1px solid var(--border);
+        transition: all 0.3s ease;
+      }
+
+      .logo i {
+        margin-right: 10px;
+        color: var(--accent);
+        transition: color 0.3s ease;
+      }
+
+      .file-explorer {
+        padding: 16px 0;
+        flex-grow: 1;
+      }
+
+      .section-title {
+        padding: 8px 16px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+      }
+
+      .file {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .file i {
+        margin-right: 8px;
+        width: 16px;
+        text-align: center;
+        transition: color 0.3s ease;
+      }
+
+      .file:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .file.active {
+        background-color: rgba(93, 120, 255, 0.15);
+        color: var(--accent);
+      }
+
+      .file.active i {
+        color: var(--accent);
+      }
+
+      .fa-html5 {
+        color: #e34c26;
+      }
+      .fa-css3-alt {
+        color: #264de4;
+      }
+      .fa-js-square {
+        color: #f0db4f;
+      }
+
+      .terminal-toggle {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        border-top: 1px solid var(--border);
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+      }
+
+      .terminal-toggle i {
+        margin-right: 8px;
+      }
+
+      .terminal-toggle:hover {
+        color: var(--text-primary);
+      }
+
+      /* Main Content Styles */
+      .main-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--editor-bg);
+        transition: all 0.3s ease;
+      }
+
+      .tab-bar {
+        height: var(--tab-height);
+        background-color: var(--secondary);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        transition: all 0.3s ease;
+      }
+
+      .tabs {
+        display: flex;
+        flex-grow: 1;
+        overflow-x: auto;
+      }
+
+      .tab {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        border-right: 1px solid var(--border);
+        font-size: 13px;
+        cursor: pointer;
+        min-width: 120px;
+        transition: all 0.3s ease;
+      }
+
+      .tab i {
+        margin-left: 8px;
+        font-size: 10px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .tab:hover i {
+        opacity: 0.6;
+      }
+
+      .tab:hover i:hover {
+        opacity: 1;
+        color: var(--text-primary);
+      }
+
+      .tab.active {
+        background-color: var(--editor-bg);
+        border-bottom: 2px solid var(--accent);
+      }
+
+      .tab-actions {
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        border-left: 1px solid var(--border);
+      }
+
+      .icon-button {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .icon-button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+      }
+
+     .editor-wrapper {
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+  height: calc(100vh - var(--tab-height) - var(--status-height));
+}
+
+.line-numbers {
+  width: 40px;
+  padding: 8px 4px;
+  text-align: right;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  color: var(--line-number-color);
+  background-color: var(--line-number-bg);
+  user-select: none;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  overflow-y: hidden;
+}
+
+.code-editor {
+  flex-grow: 1;
+  background-color: transparent;
+  color: transparent;
+  caret-color: var(--text-primary);
+  border: none;
+  padding: 8px;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  tab-size: 2;
+  white-space: pre;
+  overflow: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.code-highlight {
+  position: absolute;
+  top: 0;
+  left: 40px; /* match line-numbers width */
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 8px;
+  white-space: pre;
+  overflow: hidden;
+  z-index: 0;
+  background-color: var(--editor-bg);
+}
+
+      /* Status Bar */
+      .status-bar {
+        height: var(--status-height);
+        background-color: var(--secondary);
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        font-size: 11px;
+        transition: all 0.3s ease;
+      }
+
+      .status-item {
+        display: flex;
+        align-items: center;
+        margin-right: 16px;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+      }
+
+      .status-item i {
+        margin-right: 6px;
+        font-size: 10px;
+      }
+
+      .status-item .fa-circle {
+        color: var(--success);
+      }
+
+      .status-item .fa-wifi {
+        color: var(--success);
+      }
+
+      .status-item.right {
+        margin-left: auto;
+        margin-right: 0;
+      }
+
+      /* Preview Panel */
+      .preview-panel {
+        width: var(--preview-width);
+        background-color: white;
+        border-left: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+      }
+
+      .panel-header {
+        height: var(--tab-height);
+        background-color: var(--secondary);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        font-size: 13px;
+        transition: all 0.3s ease;
+      }
+
+         .panel-actions {
+            display: flex;
+            position: relative; /* Add this for proper dropdown positioning */
+        }
+
+      .preview-frame {
+        flex-grow: 1;
+        border: none;
+        background-color: white;
+      }
+
+      /* Preview Controls */
+      .preview-controls {
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        background-color: var(--secondary);
+        border-bottom: 1px solid var(--border);
+        transition: all 0.3s ease;
+      }
+
+      .preview-btn,
+      .full-preview-btn,
+      .theme-btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: none;
+        background-color: var(--accent);
+        color: white;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .full-preview-btn,
+      .theme-btn {
+        background-color: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+      }
+
+      .theme-btn {
+        margin-left: auto;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      /* Theme selector dropdown - Fixed positioning */
+      .theme-selector {
+        position: relative;
+        display: inline-block;
+        margin-left: auto; /* Push to the right */
+      }
+
+      .theme-options {
+        display: none;
+        position: absolute;
+        right: 0; /* Align to right edge of parent */
+        top: 100%; /* Position below the button */
+        background-color: var(--secondary);
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 100; /* Higher z-index to ensure it's on top */
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+
+      .theme-options.show {
+        display: block;
+      }
+      .theme-option {
+        color: var(--text-primary);
+        padding: 8px 16px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .theme-option:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Tooltip */
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: var(--secondary);
+        color: var(--text-primary);
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* Mobile responsiveness */
+      @media (max-width: 1200px) {
+        :root {
+          --sidebar-width: 180px;
+          --preview-width: 300px;
+        }
+      }
+
+      @media (max-width: 992px) {
+        :root {
+          --sidebar-width: 60px;
+          --preview-width: 250px;
+        }
+
+        .logo span,
+        .file span,
+        .terminal-toggle span,
+        .tab span {
+          display: none;
+        }
+
+        .logo {
+          justify-content: center;
+          padding: 18px 0;
+        }
+
+        .file {
+          justify-content: center;
+          padding: 8px 0;
+        }
+
+        .tab {
+          min-width: 60px;
+          justify-content: center;
+          padding: 0 8px;
+        }
+
+        .terminal-toggle {
+          justify-content: center;
+          padding: 12px 0;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .editor-container {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          flex-direction: row;
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+          border-bottom: none;
+          border-right: 1px solid var(--border);
+          padding: 12px 16px;
+          min-width: 60px;
+        }
+
+        .file-explorer {
+          display: flex;
+          padding: 0;
+        }
+
+        .section-title {
+          display: none;
+        }
+
+        .file {
+          border-right: 1px solid var(--border);
+          padding: 0 16px;
+        }
+
+        .terminal-toggle {
+          margin-left: auto;
+          border-left: 1px solid var(--border);
+          padding: 0 16px;
+        }
+
+        .preview-panel {
+          width: 100%;
+          height: 300px;
+          border-left: none;
+          border-top: 1px solid var(--border);
+        }
+
+        .preview-frame {
+          height: 100%;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .tab-bar {
+          flex-direction: column;
+          height: auto;
+        }
+
+        .tabs {
+          order: 2;
+          border-top: 1px solid var(--border);
+        }
+
+        .tab-actions {
+          order: 1;
+          justify-content: flex-end;
+          border-left: none;
+          padding: 4px 8px;
+        }
+
+        .preview-controls {
+          flex-wrap: wrap;
+        }
+
+        .preview-btn,
+        .full-preview-btn,
+        .theme-btn {
+          flex-grow: 1;
+          justify-content: center;
+        }
+      }
+    </style>
   </head>
-
   <body>
-    <main>
-      <div class="navigation">
-        <div class="left-side">
-          <h1 class="heading">CodeStudio Pro</h1>
-          <p class="sub-heading">Advanced Web Development Environment</p>
-        </div>
-        <div class="right-side">
-          <button class="full-preview" onclick="openIframeContentInNewTab()">
-            Open Full Preview
-          </button>
-
-          <button class="preview-btn">
-            Preview <i class="fa-solid fa-eye"></i>
-          </button>
-          <i
-            class="fa-solid fa-up-right-and-down-left-from-center full-btn"
-          ></i>
-          <i class="fa-sol id fa-gear"></i>
-        </div>
-      </div>
-
-      <!--ToolBar-->
-      <div class="toolbar">
-        <div class="d-flex">
-          <button class="run-btn">
-            <i class="fa-solid fa-play"></i>
-            Run Js
-          </button>
-
-          <button class="clear-btn">
-            <i class="fa-solid fa-trash"></i> Clear All
-          </button>
-
-          <button class="copy-btn">
-            <i class="fa-solid fa-copy"></i> Copy
-          </button>
+    <div class="editor-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo">
+          <i class="fas fa-cube"></i>
+          <span>NovaCode</span>
         </div>
 
-        <div class="toolbar-settings d-flex">
-          <p>Font 14px</p>
-          <p>Theme: dark</p>
-          <p class="d-flex gap-5">
-            <span class="connected-circle"></span>
-            Connected
-          </p>
+        <div class="file-explorer">
+          <div class="section-title">WORKSPACE</div>
+          <div class="file active" data-file="html">
+            <i class="fab fa-html5"></i>
+            <span>index.html</span>
+          </div>
+          <div class="file" data-file="css">
+            <i class="fab fa-css3-alt"></i>
+            <span>style.css</span>
+          </div>
+          <div class="file" data-file="js">
+            <i class="fab fa-js-square"></i>
+            <span>script.js</span>
+          </div>
+        </div>
+
+        <div class="terminal-toggle">
+          <i class="fas fa-terminal"></i>
+          <span>Terminal</span>
         </div>
       </div>
 
-      <!--Files Menu-->
-      <div class="file-menu">
-        <div class="menu-tab active-tab">
-          <i class="fa-brands fa-html5"></i>
-          <span>index.html</span>
-        </div>
-        <div class="menu-tab">
-          <i class="fa-brands fa-css3-alt"></i>
-          <span>style.css</span>
-        </div>
-        <div class="menu-tab">
-          <i class="fa-brands fa-square-js"></i>
-          <span>script.js</span>
-        </div>
-      </div>
-
-      <!--Code-Frame-->
-
+      <!-- Main Content -->
       <div class="main-content">
-        <textarea name="" class="code-input" autofocus></textarea>
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+          <div class="tabs">
+            <div class="tab active" data-file="html">
+              <span>index.html</span>
+              <i class="fas fa-times"></i>
+            </div>
+            <div class="tab" data-file="css">
+              <span>style.css</span>
+              <i class="fas fa-times"></i>
+            </div>
+            <div class="tab" data-file="js">
+              <span>script.js</span>
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+          <div class="tab-actions">
+            <button class="icon-button run-btn tooltip">
+              <i class="fas fa-play"></i>
+              <span class="tooltiptext">Run Code</span>
+            </button>
+            <button class="icon-button copy-btn tooltip">
+              <i class="fas fa-copy"></i>
+              <span class="tooltiptext">Copy Code</span>
+            </button>
+            <button class="icon-button clear-btn tooltip">
+              <i class="fas fa-trash"></i>
+              <span class="tooltiptext">Clear Code</span>
+            </button>
+          </div>
+        </div>
 
-        <div class="preview-page hide">
-          <iframe src="" frameborder="0" class="code-output"></iframe>
+        <!-- Editor Area -->
+        <div class="editor-wrapper">
+          <div class="line-numbers" id="line-numbers"></div>
+          <textarea
+            class="code-editor"
+            id="code-editor"
+            autofocus
+            spellcheck="false"
+            ></textarea>
+            <div class="code-highlight" id="code-highlight"></div>
+          </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <div class="status-item">
+            <i class="fas fa-code-branch"></i>
+            <span>main</span>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-circle"></i>
+            <span>JavaScript</span>
+          </div>
+          <div class="status-item">
+            <i class="fas fa-wifi"></i>
+            <span>Connected</span>
+          </div>
+          <div class="status-item right">
+            <span>UTF-8</span>
+          </div>
+          <div class="status-item right">
+            <span>LF</span>
+          </div>
+          <div class="status-item right">
+            <span>Ln 1, Col 1</span>
+          </div>
         </div>
       </div>
-    </main>
+
+      <!-- Preview Panel -->
+      <div class="preview-panel">
+        <div class="panel-header">
+          <span>Preview</span>
+          <div class="panel-actions">
+            <div class="theme-selector">
+              <button class="icon-button theme-btn">
+                <i class="fas fa-palette"></i>
+              </button>
+              <div class="theme-options">
+                <div class="theme-option" data-theme="default">Dark</div>
+                <div class="theme-option" data-theme="light">Light</div>
+                <div class="theme-option" data-theme="ocean">Ocean</div>
+                <div class="theme-option" data-theme="dracula">Dracula</div>
+                <div class="theme-option" data-theme="solarized-dark">
+                  Solarized Dark
+                </div>
+                <div class="theme-option" data-theme="solarized-light">
+                  Solarized Light
+                </div>
+                <div class="theme-option" data-theme="monokai">Monokai</div>
+                <div class="theme-option" data-theme="nord">Nord</div>
+                <div class="theme-option" data-theme="one-dark">One Dark</div>
+                <div class="theme-option" data-theme="material">Material</div>
+                <div class="theme-option" data-theme="tokyo-night">
+                  Tokyo Night
+                </div>
+                <div class="theme-option" data-theme="ayu-dark">Ayu Dark</div>
+                <div class="theme-option" data-theme="gruvbox-dark">
+                  Gruvbox Dark
+                </div>
+              </div>
+            </div>
+            <button class="icon-button full-preview-btn tooltip">
+              <i class="fas fa-expand"></i>
+              <span class="tooltiptext">Full Preview</span>
+            </button>
+            <button class="icon-button refresh-btn tooltip">
+              <i class="fas fa-sync-alt"></i>
+              <span class="tooltiptext">Refresh</span>
+            </button>
+          </div>
+        </div>
+        <div class="preview-controls">
+          <button class="preview-btn">
+            <i class="fas fa-eye"></i> Toggle Preview
+          </button>
+          <button class="full-preview-btn">
+            <i class="fas fa-expand"></i> Full Preview
+          </button>
+        </div>
+        <iframe class="preview-frame hide" id="preview-frame"></iframe>
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
