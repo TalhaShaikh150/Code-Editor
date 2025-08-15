@@ -1,33 +1,76 @@
 // Theme switching functionality
-document.addEventListener('DOMContentLoaded', () => {
-            const themeBtn = document.querySelector('.theme-btn');
-            const themeOptions = document.querySelector('.theme-options');
-            
-            themeBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent immediate closing
-                themeOptions.classList.toggle('show');
-            });
-            
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.addEventListener('click', () => {
-                    const theme = option.dataset.theme;
-                    document.body.className = theme === 'default' ? '' : `theme-${theme}`;
-                    themeOptions.classList.remove('show');
-                    localStorage.setItem('editorTheme', theme);
-                });
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', () => {
-                themeOptions.classList.remove('show');
-            });
-            
-            // Load saved theme
-            const savedTheme = localStorage.getItem('editorTheme') || 'default';
-            if (savedTheme !== 'default') {
-                document.body.classList.add(`theme-${savedTheme}`);
+document.addEventListener("DOMContentLoaded", () => {
+      const themeBtn = document.querySelector(".theme-btn");
+      const themeOptions = document.querySelector(".theme-options");
+      const currentThemeDisplay = document.querySelector(".current-theme");
+      const categoryButtons = document.querySelectorAll(".category-btn");
+
+      // Toggle main theme dropdown
+      themeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        themeOptions.classList.toggle("show");
+      });
+
+      // Toggle category dropdowns
+      categoryButtons.forEach(button => {
+        button.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const category = button.parentElement;
+          category.classList.toggle("active");
+          
+          // Close other categories
+          document.querySelectorAll(".theme-category").forEach(cat => {
+            if (cat !== category) {
+              cat.classList.remove("active");
             }
+          });
         });
+      });
+
+      // Handle theme selection
+      document.querySelectorAll(".theme-option").forEach((option) => {
+        option.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const theme = option.dataset.theme;
+          const themeName = option.textContent;
+          
+          // Apply theme
+          document.body.className = theme === "default" ? "" : `theme-${theme}`;
+          
+          // Update UI
+          currentThemeDisplay.textContent = themeName;
+          themeOptions.classList.remove("show");
+          
+          // Save to storage
+          localStorage.setItem("editorTheme", theme);
+          localStorage.setItem("editorThemeName", themeName);
+        });
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", () => {
+        themeOptions.classList.remove("show");
+        document.querySelectorAll(".theme-category").forEach(cat => {
+          cat.classList.remove("active");
+        });
+      });
+
+      // Load saved theme
+      const savedTheme = localStorage.getItem("editorTheme") || "default";
+      const savedThemeName = localStorage.getItem("editorThemeName") || "Dark";
+      
+      if (savedTheme !== "default") {
+        document.body.classList.add(`theme-${savedTheme}`);
+      }
+      currentThemeDisplay.textContent = savedThemeName;
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          themeOptions.classList.remove("show");
+        }
+      });
+    });
 // Automatic line numbering
 const codeEditor = document.getElementById("code-editor");
 const lineNumbers = document.getElementById("line-numbers");
@@ -441,26 +484,13 @@ function starterCode() {
 </html>`;
     userCode.html = codeEditor.value;
     updateLineNumbers();
-  } 
-  else if (codeEditor.value == "*") {
+  } else if (codeEditor.value == "*") {
     codeEditor.value = `* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}`;
+`;
     userCode.css = codeEditor.value;
     updateLineNumbers();
   }
@@ -516,7 +546,40 @@ document
     openIframeContentInNewTab();
   });
 
+function goFullScreen() {
+  const fullscreenBtn = document.querySelector(".full-screen-btn");
+  fullscreenBtn.addEventListener("click", () => {
+    if (
+      !document.fullscreenElement &&
+      !document.webkitFullscreenElement &&
+      !document.msFullscreenElement
+    ) {
+      // Enter fullscreen
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        // Safari
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        // IE/Edge
+        document.documentElement.msRequestFullscreen();
+      }
+    } else {
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        // Safari
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        // IE/Edge
+        document.msExitFullscreen();
+      }
+    }
+  });
+}
 document.addEventListener("DOMContentLoaded", () => {
+  goFullScreen();
   restoreCode();
   starterCode();
   menuToggle();
